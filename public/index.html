@@ -1,25 +1,524 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gestoría Virtual</title>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H4PDPM2F5V"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-H4PDPM2F5V');
-  </script>
+  <title>Gestoría Virtual - Inicio</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #1e1e2f;
+      margin: 0;
+      padding: 0;
+      color: #f0f0f0;
+    }
+
+    nav {
+      width: 100%;
+      background: #111827;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .section {
+  display: none;
+  padding: 30px 20px;
+  max-width: 700px;
+  margin: 30px auto;
+  background-color: #2c2c3c;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+    .section.active {
+      display: block;
+    }
+
+    .chat-container {
+      background: #2c2c3c;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 20px;
+      font-size: 1.4rem;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .messages {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background-color: #1e1e2f;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 12px 16px;
+      margin: 8px 0;
+      border-radius: 16px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .user {
+      background-color: #3b82f6;
+      color: white;
+      align-self: flex-end;
+      text-align: right;
+    }
+
+    .bot {
+      background-color: #374151;
+      color: #e5e7eb;
+      align-self: flex-start;
+      text-align: left;
+    }
+
+    .input-area {
+      display: flex;
+      border-top: 1px solid #444;
+      padding: 10px;
+      background-color: #2c2c3c;
+    }
+
+    .input-area input {
+      flex-grow: 1;
+      padding: 10px 15px;
+      border: 1px solid #555;
+      border-radius: 8px;
+      font-size: 1rem;
+      background-color: #1f2937;
+      color: #fff;
+      outline: none;
+    }
+
+    .input-area button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      background: #3b82f6;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #startButton, #asesorButton {
+      background: #fbbf24;
+      color: #1f2937;
+      display: none;
+      margin: 20px auto;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    #startButton.show, #asesorButton.show {
+      display: block;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    #startButton {
+      background: #58db4f;
+      color: white;
+    }
+
+    #startButton:hover {
+      background: #46c13e;
+    }
+
+    #asesorButton {
+      background: #ef4444;
+      color: white;
+    }
+
+    #asesorButton:hover {
+      background: #dc2626;
+    }
+
+    .typing {
+      font-style: italic;
+      color: #9ca3af;
+      margin: 5px 0 0 20px;
+      font-size: 0.95rem;
+      padding-left: 10px;
+    }
+
+    .dot-animate::after {
+      content: '.';
+      animation: dots 1.5s steps(3, end) infinite;
+    }
+
+    @keyframes dots {
+      0%   { content: '.'; }
+      33%  { content: '..'; }
+      66%  { content: '...'; }
+      100% { content: '.'; }
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+  
+    .background-logo {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 400px;
+      height: 400px;
+      transform: translate(-50%, -50%);
+      opacity: 0.05;
+      z-index: 0;
+      background: url('LOGO GESTORIAA.PNG') no-repeat center center;
+      background-size: contain;
+      pointer-events: none;
+    }
+
+    .corner-logo {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      width: 60px;
+      height: 60px;
+      background: url('LOGO GESTORIAA.PNG') no-repeat center center;
+      background-size: cover;
+      border-radius: 50%;
+      z-index: 10;
+    }
+
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 10px 16px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #374151;
+      border-color: #3b82f6;
+    }
+
+    nav a.active-tab {
+      background-color: #2563eb;
+      border-color: #3b82f6;
+    }
+
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 5px #0f766e; }
+      50% { box-shadow: 0 0 20px #0f766e; }
+      100% { box-shadow: 0 0 5px #0f766e; }
+    }
+
+    #startButton.glow {
+      animation: glow 1.5s infinite;
+    }
+
+
+@keyframes fadeSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+header {
+  animation: fadeSlideDown 0.6s ease-in-out;
+}
+
+</style>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-H4PDPM2F5V"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-H4PDPM2F5V');
+</script>
+
 </head>
 <body>
-  <h1>¡Bienvenido a Gestoría Virtual!</h1>
-  <p>Haz clic para iniciar tu trámite:</p>
-  <a href="https://wa.link/tbxusc" target="_blank" onclick="gtag('event', 'click', {'event_category': 'Botón', 'event_label': 'Iniciar Trámite'});">
-    <button style="background-color:#58db4f;color:white;padding:10px 20px;font-size:18px;border:none;border-radius:5px;cursor:pointer;">
-      Iniciar trámite
-    </button>
+
+    <div class="background-logo"></div>
+
+  <nav>
+    <a onclick="showSection('asistente')" class="active-tab">Inicio</a>
+    <a onclick="showSection('testimonios'); gtag('event', 'click', {'event_category': 'Pestaña', 'event_label': 'Testimonios'});">Testimonios</a>
+    <a onclick="showSection('costos'); gtag('event', 'click', {'event_category': 'Pestaña', 'event_label': 'Costos'});">Costos</a>
+    <a onclick="showSection('requisitos'); gtag('event', 'click', {'event_category': 'Pestaña', 'event_label': 'Requisitos'});">Requisitos</a>
+  </nav>
+
+
+  
+
+
+
+<div id="asistente" class="section active">
+
+<section class="bienvenida" style="max-width: 700px; margin: 30px auto; padding: 24px; background-color: #2c2c3c; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); text-align: left;">
+  <h2 style="color: #58db4f; font-size: 1.6rem; margin-bottom: 10px;">¡Bienvenido a Gestoría Virtual!</h2>
+  <p style="font-size: 1.05rem; color: #e5e7eb;">
+    Tramita tu licencia de conducir <strong>100% legal</strong> desde casa.<br><br>
+    ✅ <strong>Envío gratis</strong> a todo México<br>
+    ✅ <strong>Pago al recibir</strong> después de que te llegue tu licencia<br>
+    ✅ <strong>Validez oficial</strong> con QR y registro en el portal del Gobierno<br>
+    ✅ <strong>Trámite rápido</strong>: en 1 a 2 días hábiles
+  </p>
+  <p style="text-align: center; margin-top: 20px; font-size: 1.1rem;">
+    👇 Desplázate hacia abajo para hablar con tu asistente virtual 👇
+  </p>
+
+<div style="text-align: center; margin-top: 30px;">
+  <a href="https://whatsform.com/7i2sdc" onclick="gtag('event', 'click', {'event_category': 'Botón', 'event_label': 'Iniciar Trámite'});" target="_blank" style="
+    background-color: #58db4f;
+    color: white;
+    padding: 14px 28px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 0 12px rgba(88, 219, 79, 0.6);
+    animation: glow 1.5s infinite;
+  ">
+    📄 Iniciar trámite ahora
   </a>
-  <script src="script.js"></script>
+</div>
+
+</section>
+
+<section class="explicacion" style="max-width: 720px; margin: 30px auto; padding: 24px; background-color: #2c2c3c; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); color: #e5e7eb; font-size: 1.05rem;">
+  <h2 style="color: #58db4f; text-align:center;">¿Cómo funciona nuestro servicio?</h2>
+  <ul style="line-height: 1.8; padding-left: 20px;">
+    <li>🚚 Envío <strong>GRATIS</strong> a todo México.</li>
+    <li>🪪 Licencia oficial del estado de Guerrero, <strong>100% legal</strong>, válida en todo el país, con código QR y registro en página de Gobierno.</li>
+    <li>💵 <strong>¡Pagas hasta recibir tu licencia!</strong> Llega a tu domicilio en 1 a 2 días hábiles después de enviar tu documentación por WhatsApp (varía según tu código postal).</li>
+  </ul>
+  <p style="margin-top: 15px;"><strong>🔔 Importante:</strong> Una vez que recibes tu licencia, tienes un lapso de <strong>48 horas</strong> para realizar el pago. En caso de no hacerlo, la licencia será dada de baja.</p>
+
+  <hr style="margin: 30px 0; border-color: #3b82f6;">
+
+  <h3 style="color: #58db4f;">💳 Costos</h3>
+  <p><em>(Recuerda: se paga únicamente después de recibir la licencia en tu domicilio)</em></p>
+
+  <strong>Tipos de licencia:</strong><br>
+  - Automovilista = Tipo A<br>
+  - Chofer = Tipo B<br>
+  - Motociclista = Tipo C<br><br>
+
+  <strong>Vigencias y costos:</strong><br>
+  - 5 años: $620<br>
+  - 3 años: $590<br>
+  <em>(Aplica para cualquiera de los tipos anteriores)</em><br><br>
+
+  <img src="a9cfb1e9-9986-4115-99de-5dd836e90bf8.jpg" alt="Tabla de costos" style="margin-top: 10px; width: 100%; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.2);" />
+
+  <hr style="margin: 30px 0; border-color: #3b82f6;">
+
+  <h3 style="color: #58db4f;">📋 Requisitos para iniciar tu trámite</h3>
+  <p>1. Llena el formulario en línea 👉 <a href="https://whatsform.com/7i2sdc" onclick="gtag('event', 'click', {'event_category': 'Botón', 'event_label': 'Iniciar Trámite'});" target="_blank" style="color:#3b82f6;">Formulario de Solicitud</a></p>
+  <p>2. Al finalizarlo, da clic en el botón para enviarlo por WhatsApp. Un asesor revisará tu información y te dirá cómo continuar.</p>
+  <p>3. En esa misma conversación, deberás enviar:</p>
+  <ul style="line-height: 1.8; padding-left: 20px;">
+    <li>📄 INE por ambos lados</li>
+    <li>🧍‍♂️ Foto de frente sin lentes</li>
+    <li>✍️ Foto de tu firma</li>
+  </ul>
+  <p>Un asesor verificará tus documentos y te confirmará el inicio del trámite.</p>
+
+<div style="text-align: center; margin-top: 30px;">
+  <a href="https://whatsform.com/7i2sdc" onclick="gtag('event', 'click', {'event_category': 'Botón', 'event_label': 'Iniciar Trámite'});" target="_blank" style="
+    background-color: #58db4f;
+    color: white;
+    padding: 14px 28px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 0 12px rgba(88, 219, 79, 0.6);
+    animation: glow 1.5s infinite;
+  ">
+    📄 Iniciar trámite ahora
+  </a>
+</div>
+
+</section>
+    <div class="chat-container">
+      
+
+<header style="
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: #111827;
+  padding: 16px 20px;
+  border-bottom: 2px solid #3b82f6;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: white;
+">
+  <img src="LOGO GESTORIAA.PNG" alt="Logo" style="width: 48px; height: 48px; border-radius: 50%;" />
+  <span>Gestoría Virtual - Inicio</span>
+</header>
+
+
+      <div class="messages" id="messages"><div id="scroll-anchor"></div></div>
+      <div id="typing" class="typing dot-animate" style="display: none;">Escribiendo</div>
+      <div class="input-area">
+        <input type="text" id="userInput" placeholder="Escribe tu mensaje..." / value="Quiero tramitar mi licencia de manera facil y rapida">
+        <button onclick="sendMessage()">Enviar</button>
+      </div>
+      <button id="startButton" onclick="window.location.href='https://whatsform.com/7i2sdc'">Iniciar trámite</button>
+      <button id="asesorButton" onclick="window.location.href='https://wa.link/qojyrf'">Hablar con un Asesor</button>
+    </div>
+  </div>
+
+  <div id="costos" class="section">
+    
+<header style="
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: #111827;
+  padding: 16px 20px;
+  border-bottom: 2px solid #3b82f6;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: white;
+">
+  <img src="LOGO GESTORIAA.PNG" alt="Logo" style="width: 48px; height: 48px; border-radius: 50%;" />
+  <span>Costos</span>
+</header>
+
+    
+    <div style="max-width:600px; margin: 30px auto; font-size: 1.05rem; line-height: 1.6;">
+      <strong>TIPOS DE LICENCIA:</strong><br>
+      - Automovilista = Tipo A<br>
+      - Chofer = Tipo B<br>
+      - Motociclista = Tipo C<br><br>
+
+      <strong>Vigencias y costos:</strong><br>
+      - 5 años: $620<br>
+      - 3 años: $590<br>
+      <span style="font-style: italic;">(Aplica para cualquiera de los tipos anteriores)</span>
+    </div>
+<img src="PRECIOS.jpg" alt="Costos de licencias" />
+  </div>
+
+  
+<script>
+  function showSection(sectionId) {
+    // Oculta todas las secciones
+    const sections = document.querySelectorAll(".section");
+    sections.forEach((section) => section.classList.remove("active"));
+
+    // Elimina la clase 'active-tab' de todos los enlaces del nav
+    const navLinks = document.querySelectorAll("nav a");
+    navLinks.forEach((link) => link.classList.remove("active-tab"));
+
+    // Muestra la sección seleccionada
+    document.getElementById(sectionId).classList.add("active");
+
+    // Agrega clase activa al botón de navegación correspondiente
+    const navLink = Array.from(navLinks).find(link => link.textContent.trim().toLowerCase() === sectionId.toLowerCase());
+    if (navLink) {
+      navLink.classList.add("active-tab");
+    }
+  }
+</script>
+
+
+  <div id="requisitos" class="section">
+    
+<header style="
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: #111827;
+  padding: 16px 20px;
+  border-bottom: 2px solid #3b82f6;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: white;
+">
+  <img src="LOGO GESTORIAA.PNG" alt="Logo" style="width: 48px; height: 48px; border-radius: 50%;" />
+  <span>Requisitos</span>
+</header>
+
+    <p style="text-align:center; max-width:600px; margin:auto; font-size:1.05rem;">
+      Primero se debe llenar la solicitud a través del siguiente enlace para poder comenzar con el trámite.<br><br>
+      <a href="https://whatsform.com/7i2sdc" onclick="gtag('event', 'click', {'event_category': 'Botón', 'event_label': 'Iniciar Trámite'});" target="_blank" style="color:#3b82f6;">https://whatsform.com/7i2sdc</a><br><br>
+      También se necesitan en foto:<br><br>
+      1) INE POR AMBOS LADOS<br>
+      2) FOTO DE FRENTE SIN LENTES<br>
+      3) FOTO DE FIRMA<br><br>
+      Se anexan fotos ejemplo:
+    </p>
+    <br>
+    <div style="text-align:center;">
+      <img src="FOTOS EJEMPLO.jpg" alt="Fotos ejemplo" />
+    </div>
+  </div>
+
+<div id="testimonios" class="section">
+  <section style="max-width: 720px; margin: 20px auto 10px auto; padding: 20px; background-color: #1f2937; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.4); text-align: center;">
+    <h2 style="color: #58db4f; font-size: 1.3rem; margin-bottom: 12px;">Mira nuestras recomendaciones en Facebook</h2>
+    <a href="https://www.facebook.com/profile.php?id=61559438742815&sk=reviews" target="_blank">
+      <img src="recomendaciones.png" alt="Recomendaciones en Facebook" style="width: 100%; max-width: 480px; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.3);" />
+    </a>
+    <p style="margin-top: 10px;">
+      <a href="https://www.facebook.com/profile.php?id=61559438742815&sk=reviews" target="_blank" style="color: #3b82f6; font-weight: bold; text-decoration: underline;">Ver más reseñas en Facebook</a>
+    </p>
+  </section>
+
+  <header style="display: flex; align-items: center; justify-content: center; gap: 12px; background-color: #111827; padding: 16px 20px; border-bottom: 2px solid #3b82f6; font-size: 1.4rem; font-weight: bold; color: white;">
+    <img src="LOGO GESTORIAA.PNG" alt="Logo" style="width: 48px; height: 48px; border-radius: 50%;" />
+    <span>Testimonios</span>
+  </header>
+  <p style="text-align:center; margin: 20px 0; font-size: 1.05rem; color: #e5e7eb;">Nuestros clientes comparten su experiencia con Gestoría Virtual. Gracias por su confianza. 🙌</p>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; padding: 20px;">
+    <img src="testi1.png" alt="Testimonio 1" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" /><img src="testi2.png" alt="Testimonio 2" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" /><img src="testi3.png" alt="Testimonio 3" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" /><img src="testi4.png" alt="Testimonio 4" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" /><img src="testi5.png" alt="Testimonio 5" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" /><img src="testi6.png" alt="Testimonio 6" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" /><img src="testi7.png" alt="Testimonio 7" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" /><img src="testi8.png" alt="Testimonio 8" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" /><img src="testi9.png" alt="Testimonio 9" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" /><img src="testi10.png" alt="Testimonio 10" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" /><img src="testi11.png" alt="Testimonio 11" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" />
+  </div>
+</div>
 </body>
+
+
 </html>
